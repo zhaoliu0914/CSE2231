@@ -1,0 +1,10 @@
+/**
+ *
+ * Test case for TagCloudGenerator.
+ *
+ * @author Zhao Liu
+ *
+ */
+public class TagCloudGeneratorTest {
+
+}

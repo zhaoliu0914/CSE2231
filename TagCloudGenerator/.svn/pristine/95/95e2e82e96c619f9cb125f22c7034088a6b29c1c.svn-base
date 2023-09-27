@@ -1,0 +1,275 @@
+import java.io.Serializable;
+import java.util.Comparator;
+import java.util.regex.Pattern;
+
+import components.map.Map;
+import components.map.Map1L;
+import components.queue.Queue;
+import components.queue.Queue1L;
+import components.queue.Queue2;
+import components.set.Set;
+import components.set.Set1L;
+import components.simplereader.SimpleReader;
+import components.simplereader.SimpleReader1L;
+import components.simplewriter.SimpleWriter;
+import components.simplewriter.SimpleWriter1L;
+
+/**
+ * The program shall ask the user for the name of an input file, for the name of
+ * an output file, and for the number of words to be included in the generated
+ * tag cloud (a positive integer, say N).
+ *
+ * The program shall respect the user input as being the complete relative or
+ * absolute path as the name of the input file, or the name of the output file,
+ * and will not augment the given path in any way, e.g., it will not supply its
+ * own filename extension. For example, a reasonable user response for the name
+ * of the input file could directly result in the String value
+ * "data/importance.txt"; similarly, a reasonable user response for the name of
+ * the output file could directly result in the String value
+ * "data/importance.html".
+ *
+ * @author Zhao Liu
+ * @author Zishu Ling
+ *
+ */
+public final class TagCloudGenerator {
+
+    /**
+     * Private constructor so this utility class cannot be instantiated.
+     */
+    private TagCloudGenerator() {
+    }
+
+    /**
+     * Compare {@code String}s in lexicographic order.
+     */
+    private static class StringLT implements Comparator<String>, Serializable {
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public int compare(String o1, String o2) {
+            String str1 = o1.toLowerCase();
+            String str2 = o2.toLowerCase();
+            return str1.compareTo(str2);
+        }
+    }
+
+    /**
+     * Simply, read all the lines in the file and then re-store into a Queue.
+     *
+     * @param inputFile
+     *            from user enter
+     * @return the Queue with all the lines from file.
+     */
+    public static Queue<String> convertInputFileToQueue(
+            SimpleReader inputFile) {
+        assert inputFile != null : "Violation of: inputFile is not null";
+        assert inputFile.isOpen() : "Violation of: inputFile is not open";
+
+        Queue<String> sentences = new Queue2<>();
+
+        String line;
+        while (!inputFile.atEOS()) {
+            line = inputFile.nextLine();
+            sentences.enqueue(line);
+        }
+
+        return sentences;
+    }
+
+    /**
+     * loop every sentences and then split sentence into words based on
+     * separators.
+     *
+     * separator means char from index 32 to 64 in ASCII Code.
+     *
+     * count every words and store into a map which key is word and value their
+     * corresponding counts.
+     *
+     * @param sentences
+     *            a Queue contains all the lines from file
+     * @return a map, key is word and value is their corresponding counts
+     */
+    public static Map<String, Integer> countWords(Queue<String> sentences) {
+        assert sentences != null : "Violation of: sentences is not null";
+
+        Map<String, Integer> wordsMap = new Map1L<>();
+
+        // the separator means char from index 32 to 64 in ASCII Code.
+        Set<String> separatorSet = new Set1L<>();
+        final int fromIndex = 32;
+        final int endIndex = 64;
+        for (int i = fromIndex; i <= endIndex; i++) {
+            String separatorStr = Character.toString(i);
+            separatorSet.add(separatorStr);
+        }
+
+        // loop every sentences and then split sentence into words based on separators
+        // count every words and
+        // store into a map which key is word and value is their corresponding counts
+        for (String sentence : sentences) {
+
+            Queue<String> wordsQueue = new Queue1L<>();
+            wordsQueue.enqueue(sentence);
+
+            // split sentence based on separator
+            for (String separator : separatorSet) {
+                Queue<String> tempQueue = new Queue1L<>();
+
+                for (String word : wordsQueue) {
+                    //String[] tokens = word.split(separator);
+                    String[] tokens = word.split(Pattern.quote(separator));
+
+                    for (String token : tokens) {
+                        tempQueue.enqueue(token);
+                    }
+                }
+
+                wordsQueue.clear();
+                wordsQueue.transferFrom(tempQueue);
+            }
+
+            // count every words and store word and counts into a map
+            for (String word : wordsQueue) {
+                if (wordsMap.hasKey(word)) {
+                    int count = wordsMap.value(word);
+                    wordsMap.replaceValue(word, count + 1);
+                } else {
+                    wordsMap.add(word, 1);
+                }
+            }
+        }
+
+        // remove word which is empty text.
+        if (wordsMap.size() > 0) {
+            wordsMap.remove("");
+        }
+
+        return wordsMap;
+    }
+
+    /**
+     * sort words (which is key from {@code wordsMap}) in alphabetical order.
+     *
+     * @param wordsMap
+     *            key is word, value is their corresponding counts.
+     * @return a sorted queue in alphabetical order
+     */
+    public static Queue<String> sortWordsInAlphabetical(
+            Map<String, Integer> wordsMap) {
+        assert wordsMap != null : "Violation of: wordsMap is not null";
+
+        Queue<String> words = new Queue2<>();
+
+        for (Map.Pair<String, Integer> word : wordsMap) {
+            String wordStr = word.key();
+            words.enqueue(wordStr);
+        }
+
+        // sort in alphabetical order
+        Comparator<String> comparator = new StringLT();
+        words.sort(comparator);
+
+        return words;
+    }
+
+    /**
+     * HTML file displaying the name of the input file in a heading followed by
+     * a table listing the words and their corresponding counts.
+     *
+     * The words should list in alphabetical order.
+     *
+     * Words contain no whitespace characters.
+     *
+     * @param words
+     *            a sorted queue in alphabetical order
+     * @param wordsMap
+     *            key is word, value is their corresponding counts
+     * @param inputFile
+     *            a input file from user enter
+     * @param outputFile
+     *            a output file from user enter
+     */
+    public static void writeWordsToHTML(Queue<String> words,
+            Map<String, Integer> wordsMap, String inputFile,
+            String outputFile) {
+        assert words != null : "Violation of: words is not null";
+        assert wordsMap != null : "Violation of: wordsMap is not null";
+        assert outputFile != null : "Violation of: outputFile is not null";
+
+        // output HTML file
+        SimpleWriter outputWriter = new SimpleWriter1L(outputFile);
+
+        outputWriter.println("<html>");
+        outputWriter.println("<head>");
+        outputWriter
+                .println("<title>Words Counted in " + inputFile + "</title>");
+        outputWriter.println("</head>");
+        outputWriter.println("<body>");
+        outputWriter.println("<h2>Words Counted in " + inputFile + "</h2>");
+        outputWriter.println("<hr />");
+        outputWriter.println("<table border=\"1\">");
+        outputWriter.println("<tr>");
+        outputWriter.println("<th>Words</th>");
+        outputWriter.println("<th>Counts</th>");
+        outputWriter.println("</tr>");
+        for (String word : words) {
+            int counts = wordsMap.value(word);
+            outputWriter.println("<tr>");
+            outputWriter.println("<td>" + word + "</td>");
+            outputWriter.println("<td>" + counts + "</td>");
+            outputWriter.println("</tr>");
+        }
+        outputWriter.println("</table>");
+        outputWriter.println("</body>");
+        outputWriter.println("</html>");
+
+        outputWriter.close();
+    }
+
+    /**
+     * Main method.
+     *
+     * @param args
+     *            the command line arguments
+     */
+    public static void main(String[] args) {
+        SimpleReader in = new SimpleReader1L();
+        SimpleWriter out = new SimpleWriter1L();
+
+        // get file name from user.
+        out.print(
+                "Please enter name of input file in either relative or absolute path: ");
+        String inputFile = in.nextLine();
+
+        // get output file from user.
+        out.print("Please enter name of an output HTML file in "
+                + "either relative or absolute path: ");
+        String outputFile = in.nextLine();
+
+        // initializing input file and output writer
+        SimpleReader inputReader = new SimpleReader1L(inputFile);
+        //SimpleWriter outputWriter = new SimpleWriter1L(outputFolder);
+
+        // read all the lines into contents queue.
+        Queue<String> sentences = convertInputFileToQueue(inputReader);
+
+        // convert these lines into a map.
+        // key is word, and value is their corresponding counts.
+        Map<String, Integer> wordsMap = countWords(sentences);
+
+        // store all the key into Queue and sort it in alphabetical order
+        Queue<String> wordsQueue = sortWordsInAlphabetical(wordsMap);
+
+        // write all the words into HTML file.
+        writeWordsToHTML(wordsQueue, wordsMap, inputFile, outputFile);
+
+        /*
+         * Close input and output streams
+         */
+        inputReader.close();
+        in.close();
+        out.close();
+    }
+
+}

@@ -1,0 +1,21 @@
+IF next-is-wall THEN
+END IF
+turnleft
+infect
+IF random THEN
+   turnleft
+   infect
+ELSE THEN
+   go-for-it
+   turnright
+   look-for-something
+END IF
+TurnAround
+WHILE true DO
+   two
+   IF next-is-empty THEN
+     move
+   END IF
+   two
+   one
+END WHILE

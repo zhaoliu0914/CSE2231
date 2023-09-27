@@ -1,0 +1,549 @@
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
+
+import components.naturalnumber.NaturalNumber;
+
+/**
+ * JUnit test fixture for {@code NaturalNumber}'s constructors and kernel
+ * methods.
+ *
+ * @author Zhao Liu
+ * @author Zishu Ling
+ *
+ */
+public abstract class NaturalNumberTest {
+
+    /**
+     * Invokes the appropriate {@code NaturalNumber} constructor for the
+     * implementation under test and returns the result.
+     *
+     * @return the new number
+     * @ensures constructorTest = 0
+     */
+    protected abstract NaturalNumber constructorTest();
+
+    /**
+     * Invokes the appropriate {@code NaturalNumber} constructor for the
+     * implementation under test and returns the result.
+     *
+     * @param i
+     *            {@code int} to initialize from
+     * @return the new number
+     * @requires i >= 0
+     * @ensures constructorTest = i
+     */
+    protected abstract NaturalNumber constructorTest(int i);
+
+    /**
+     * Invokes the appropriate {@code NaturalNumber} constructor for the
+     * implementation under test and returns the result.
+     *
+     * @param s
+     *            {@code String} to initialize from
+     * @return the new number
+     * @requires there exists n: NATURAL (s = TO_STRING(n))
+     * @ensures s = TO_STRING(constructorTest)
+     */
+    protected abstract NaturalNumber constructorTest(String s);
+
+    /**
+     * Invokes the appropriate {@code NaturalNumber} constructor for the
+     * implementation under test and returns the result.
+     *
+     * @param n
+     *            {@code NaturalNumber} to initialize from
+     * @return the new number
+     * @ensures constructorTest = n
+     */
+    protected abstract NaturalNumber constructorTest(NaturalNumber n);
+
+    /**
+     * Invokes the appropriate {@code NaturalNumber} constructor for the
+     * reference implementation and returns the result.
+     *
+     * @return the new number
+     * @ensures constructorRef = 0
+     */
+    protected abstract NaturalNumber constructorRef();
+
+    /**
+     * Invokes the appropriate {@code NaturalNumber} constructor for the
+     * reference implementation and returns the result.
+     *
+     * @param i
+     *            {@code int} to initialize from
+     * @return the new number
+     * @requires i >= 0
+     * @ensures constructorRef = i
+     */
+    protected abstract NaturalNumber constructorRef(int i);
+
+    /**
+     * Invokes the appropriate {@code NaturalNumber} constructor for the
+     * reference implementation and returns the result.
+     *
+     * @param s
+     *            {@code String} to initialize from
+     * @return the new number
+     * @requires there exists n: NATURAL (s = TO_STRING(n))
+     * @ensures s = TO_STRING(constructorRef)
+     */
+    protected abstract NaturalNumber constructorRef(String s);
+
+    /**
+     * Invokes the appropriate {@code NaturalNumber} constructor for the
+     * reference implementation and returns the result.
+     *
+     * @param n
+     *            {@code NaturalNumber} to initialize from
+     * @return the new number
+     * @ensures constructorRef = n
+     */
+    protected abstract NaturalNumber constructorRef(NaturalNumber n);
+
+    // TODO - add test cases for four constructors, multiplyBy10, divideBy10, isZero
+
+    /**
+     * Test for empty constructor
+     */
+    @Test
+    public final void testEmptyConstructor_1() {
+        NaturalNumber refNaturalNumber = this.constructorRef();
+        NaturalNumber testNaturalNumber = this.constructorTest();
+
+        assertEquals(refNaturalNumber, testNaturalNumber);
+    }
+
+    /**
+     * Test for int constructor
+     */
+    @Test
+    public final void testIntConstructor_1() {
+        NaturalNumber refNaturalNumber = this.constructorRef(0);
+        NaturalNumber testNaturalNumber = this.constructorTest(0);
+
+        assertEquals(refNaturalNumber, testNaturalNumber);
+    }
+
+    /**
+     * Test for int constructor
+     */
+    @Test
+    public final void testIntConstructor_2() {
+        NaturalNumber refNaturalNumber = this.constructorRef(5);
+        NaturalNumber testNaturalNumber = this.constructorTest(5);
+
+        assertEquals(refNaturalNumber, testNaturalNumber);
+    }
+
+    /**
+     * Test for int constructor
+     */
+    @Test
+    public final void testIntConstructor_3() {
+        NaturalNumber refNaturalNumber = this.constructorRef(Integer.MAX_VALUE);
+        NaturalNumber testNaturalNumber = this
+                .constructorTest(Integer.MAX_VALUE);
+
+        assertEquals(refNaturalNumber, testNaturalNumber);
+    }
+
+    /**
+     * Test for String constructor
+     */
+    @Test
+    public final void testStringConstructor_1() {
+        NaturalNumber refNaturalNumber = this.constructorRef("0");
+        NaturalNumber testNaturalNumber = this.constructorTest("0");
+
+        assertEquals(refNaturalNumber, testNaturalNumber);
+    }
+
+    /**
+     * Test for String constructor
+     */
+    @Test
+    public final void testStringConstructor_2() {
+        NaturalNumber refNaturalNumber = this.constructorRef("9");
+        NaturalNumber testNaturalNumber = this.constructorTest("9");
+
+        assertEquals(refNaturalNumber, testNaturalNumber);
+    }
+
+    /**
+     * Test for String constructor
+     */
+    @Test
+    public final void testStringConstructor_3() {
+        String maxValue = String.valueOf(Integer.MAX_VALUE);
+        NaturalNumber refNaturalNumber = this.constructorRef(maxValue);
+        NaturalNumber testNaturalNumber = this.constructorTest(maxValue);
+
+        assertEquals(refNaturalNumber, testNaturalNumber);
+    }
+
+    /**
+     * Test for String constructor
+     */
+    @Test
+    public final void testStringConstructor_4() {
+        String overflowValue = String.valueOf(Integer.MAX_VALUE) + "9999";
+        NaturalNumber refNaturalNumber = this.constructorRef(overflowValue);
+        NaturalNumber testNaturalNumber = this.constructorTest(overflowValue);
+
+        assertEquals(refNaturalNumber, testNaturalNumber);
+    }
+
+    /**
+     * Test for NaturalNumber constructor
+     */
+    @Test
+    public final void testNaturalNumberConstructor_1() {
+        NaturalNumber refNaturalNumber = this.constructorRef();
+        NaturalNumber testNaturalNumber = this
+                .constructorTest(refNaturalNumber);
+
+        assertEquals(refNaturalNumber, testNaturalNumber);
+    }
+
+    /**
+     * Test for NaturalNumber constructor
+     */
+    @Test
+    public final void testNaturalNumberConstructor_2() {
+        NaturalNumber refNaturalNumber = this.constructorRef(0);
+        NaturalNumber testNaturalNumber = this
+                .constructorTest(refNaturalNumber);
+
+        assertEquals(refNaturalNumber, testNaturalNumber);
+    }
+
+    /**
+     * Test for NaturalNumber constructor
+     */
+    @Test
+    public final void testNaturalNumberConstructor_3() {
+        NaturalNumber refNaturalNumber = this.constructorRef(500);
+        NaturalNumber testNaturalNumber = this
+                .constructorTest(refNaturalNumber);
+
+        assertEquals(refNaturalNumber, testNaturalNumber);
+    }
+
+    /**
+     * Test for NaturalNumber constructor
+     */
+    @Test
+    public final void testNaturalNumberConstructor_4() {
+        NaturalNumber refNaturalNumber = this.constructorRef(Integer.MAX_VALUE);
+        NaturalNumber testNaturalNumber = this
+                .constructorTest(refNaturalNumber);
+
+        assertEquals(refNaturalNumber, testNaturalNumber);
+    }
+
+    /**
+     * Test for NaturalNumber constructor
+     */
+    @Test
+    public final void testNaturalNumberConstructor_5() {
+        NaturalNumber refNaturalNumber = this.constructorRef("0");
+        NaturalNumber testNaturalNumber = this
+                .constructorTest(refNaturalNumber);
+
+        assertEquals(refNaturalNumber, testNaturalNumber);
+    }
+
+    /**
+     * Test for NaturalNumber constructor
+     */
+    @Test
+    public final void testNaturalNumberConstructor_6() {
+        NaturalNumber refNaturalNumber = this.constructorRef("999");
+        NaturalNumber testNaturalNumber = this
+                .constructorTest(refNaturalNumber);
+
+        assertEquals(refNaturalNumber, testNaturalNumber);
+    }
+
+    /**
+     * Test for NaturalNumber constructor
+     */
+    @Test
+    public final void testNaturalNumberConstructor_7() {
+        String maxValue = String.valueOf(Integer.MAX_VALUE);
+
+        NaturalNumber refNaturalNumber = this.constructorRef(maxValue);
+        NaturalNumber testNaturalNumber = this
+                .constructorTest(refNaturalNumber);
+
+        assertEquals(refNaturalNumber, testNaturalNumber);
+    }
+
+    /**
+     * Test for NaturalNumber constructor
+     */
+    @Test
+    public final void testNaturalNumberConstructor_8() {
+        String overflowValue = String.valueOf(Integer.MAX_VALUE) + "8888";
+        NaturalNumber refNaturalNumber = this.constructorRef(overflowValue);
+        NaturalNumber testNaturalNumber = this
+                .constructorTest(refNaturalNumber);
+
+        assertEquals(refNaturalNumber, testNaturalNumber);
+    }
+
+    /**
+     * Test for MultiplyBy10
+     */
+    @Test
+    public final void testMultiplyBy10_1() {
+        NaturalNumber refNaturalNumber = this.constructorRef();
+        NaturalNumber testNaturalNumber = this.constructorTest();
+
+        refNaturalNumber.multiplyBy10(0);
+        testNaturalNumber.multiplyBy10(0);
+
+        assertEquals(refNaturalNumber, testNaturalNumber);
+    }
+
+    /**
+     * Test for MultiplyBy10
+     */
+    @Test
+    public final void testMultiplyBy10_2() {
+        NaturalNumber refNaturalNumber = this.constructorRef();
+        NaturalNumber testNaturalNumber = this.constructorTest();
+
+        refNaturalNumber.multiplyBy10(7);
+        testNaturalNumber.multiplyBy10(7);
+
+        assertEquals(refNaturalNumber, testNaturalNumber);
+    }
+
+    /**
+     * Test for MultiplyBy10
+     */
+    @Test
+    public final void testMultiplyBy10_3() {
+        NaturalNumber refNaturalNumber = this.constructorRef("5");
+        NaturalNumber testNaturalNumber = this.constructorTest("5");
+
+        refNaturalNumber.multiplyBy10(0);
+        testNaturalNumber.multiplyBy10(0);
+
+        assertEquals(refNaturalNumber, testNaturalNumber);
+    }
+
+    /**
+     * Test for MultiplyBy10
+     */
+    @Test
+    public final void testMultiplyBy10_4() {
+        NaturalNumber refNaturalNumber = this.constructorRef("5");
+        NaturalNumber testNaturalNumber = this.constructorTest("5");
+
+        refNaturalNumber.multiplyBy10(7);
+        testNaturalNumber.multiplyBy10(7);
+
+        assertEquals(refNaturalNumber, testNaturalNumber);
+    }
+
+    /**
+     * Test for MultiplyBy10
+     */
+    @Test
+    public final void testMultiplyBy10_5() {
+        NaturalNumber refNaturalNumber = this.constructorRef("10");
+        NaturalNumber testNaturalNumber = this.constructorTest("10");
+
+        refNaturalNumber.multiplyBy10(7);
+        testNaturalNumber.multiplyBy10(7);
+
+        assertEquals(refNaturalNumber, testNaturalNumber);
+    }
+
+    /**
+     * Test for MultiplyBy10
+     */
+    @Test
+    public final void testMultiplyBy10_6() {
+        NaturalNumber refNaturalNumber = this.constructorRef(Integer.MAX_VALUE);
+        NaturalNumber testNaturalNumber = this
+                .constructorTest(Integer.MAX_VALUE);
+
+        refNaturalNumber.multiplyBy10(0);
+        testNaturalNumber.multiplyBy10(0);
+
+        assertEquals(refNaturalNumber, testNaturalNumber);
+    }
+
+    /**
+     * Test for MultiplyBy10
+     */
+    @Test
+    public final void testMultiplyBy10_7() {
+        NaturalNumber refNaturalNumber = this.constructorRef(Integer.MAX_VALUE);
+        NaturalNumber testNaturalNumber = this
+                .constructorTest(Integer.MAX_VALUE);
+
+        refNaturalNumber.multiplyBy10(3);
+        testNaturalNumber.multiplyBy10(3);
+
+        assertEquals(refNaturalNumber, testNaturalNumber);
+    }
+
+    /**
+     * Test for MultiplyBy10
+     */
+    @Test
+    public final void testMultiplyBy10_8() {
+        String overflowValue = String.valueOf(Integer.MAX_VALUE) + "999";
+        NaturalNumber refNaturalNumber = this.constructorRef(overflowValue);
+        NaturalNumber testNaturalNumber = this.constructorTest(overflowValue);
+
+        refNaturalNumber.multiplyBy10(0);
+        testNaturalNumber.multiplyBy10(0);
+
+        assertEquals(refNaturalNumber, testNaturalNumber);
+    }
+
+    /**
+     * Test for MultiplyBy10
+     */
+    @Test
+    public final void testMultiplyBy10_9() {
+        String overflowValue = String.valueOf(Integer.MAX_VALUE) + "999";
+        NaturalNumber refNaturalNumber = this.constructorRef(overflowValue);
+        NaturalNumber testNaturalNumber = this.constructorTest(overflowValue);
+
+        refNaturalNumber.multiplyBy10(9);
+        testNaturalNumber.multiplyBy10(9);
+
+        assertEquals(refNaturalNumber, testNaturalNumber);
+    }
+
+    /**
+     * Test for DivideBy10
+     */
+    @Test
+    public final void testDivideBy10_1() {
+        NaturalNumber refNaturalNumber = this.constructorRef();
+        NaturalNumber testNaturalNumber = this.constructorTest();
+
+        int refReturn = refNaturalNumber.divideBy10();
+        int testReturn = testNaturalNumber.divideBy10();
+
+        assertEquals(refNaturalNumber, testNaturalNumber);
+        assertEquals(refReturn, testReturn);
+    }
+
+    /**
+     * Test for DivideBy10
+     */
+    @Test
+    public final void testDivideBy10_2() {
+        NaturalNumber refNaturalNumber = this.constructorRef("0");
+        NaturalNumber testNaturalNumber = this.constructorTest("0");
+
+        int refReturn = refNaturalNumber.divideBy10();
+        int testReturn = testNaturalNumber.divideBy10();
+
+        assertEquals(refNaturalNumber, testNaturalNumber);
+        assertEquals(refReturn, testReturn);
+    }
+
+    /**
+     * Test for DivideBy10
+     */
+    @Test
+    public final void testDivideBy10_3() {
+        NaturalNumber refNaturalNumber = this.constructorRef("5");
+        NaturalNumber testNaturalNumber = this.constructorTest("5");
+
+        int refReturn = refNaturalNumber.divideBy10();
+        int testReturn = testNaturalNumber.divideBy10();
+
+        assertEquals(refNaturalNumber, testNaturalNumber);
+        assertEquals(refReturn, testReturn);
+    }
+
+    /**
+     * Test for DivideBy10
+     */
+    @Test
+    public final void testDivideBy10_4() {
+        String overflowValue = String.valueOf(Integer.MAX_VALUE) + "1000";
+        NaturalNumber refNaturalNumber = this.constructorRef(overflowValue);
+        NaturalNumber testNaturalNumber = this.constructorTest(overflowValue);
+
+        int refReturn = refNaturalNumber.divideBy10();
+        int testReturn = testNaturalNumber.divideBy10();
+
+        assertEquals(refNaturalNumber, testNaturalNumber);
+        assertEquals(refReturn, testReturn);
+    }
+
+    /**
+     * Test for isZero
+     */
+    @Test
+    public final void testIsZero_1() {
+        NaturalNumber refNaturalNumber = this.constructorRef();
+        NaturalNumber testNaturalNumber = this.constructorTest();
+
+        boolean refReturn = refNaturalNumber.isZero();
+        boolean testReturn = testNaturalNumber.isZero();
+
+        assertEquals(refNaturalNumber, testNaturalNumber);
+        assertEquals(refReturn, testReturn);
+    }
+
+    /**
+     * Test for isZero
+     */
+    @Test
+    public final void testIsZero_2() {
+        NaturalNumber refNaturalNumber = this.constructorRef("0");
+        NaturalNumber testNaturalNumber = this.constructorTest("0");
+
+        boolean refReturn = refNaturalNumber.isZero();
+        boolean testReturn = testNaturalNumber.isZero();
+
+        assertEquals(refNaturalNumber, testNaturalNumber);
+        assertEquals(refReturn, testReturn);
+    }
+
+    /**
+     * Test for isZero
+     */
+    @Test
+    public final void testIsZero_3() {
+        NaturalNumber refNaturalNumber = this.constructorRef("1000");
+        NaturalNumber testNaturalNumber = this.constructorTest("1000");
+
+        boolean refReturn = refNaturalNumber.isZero();
+        boolean testReturn = testNaturalNumber.isZero();
+
+        assertEquals(refNaturalNumber, testNaturalNumber);
+        assertEquals(refReturn, testReturn);
+    }
+
+    /**
+     * Test for isZero
+     */
+    @Test
+    public final void testIsZero_4() {
+        String overflowValue = String.valueOf(Integer.MAX_VALUE) + "1000";
+        NaturalNumber refNaturalNumber = this.constructorRef(overflowValue);
+        NaturalNumber testNaturalNumber = this.constructorTest(overflowValue);
+
+        boolean refReturn = refNaturalNumber.isZero();
+        boolean testReturn = testNaturalNumber.isZero();
+
+        assertEquals(refNaturalNumber, testNaturalNumber);
+        assertEquals(refReturn, testReturn);
+    }
+
+}

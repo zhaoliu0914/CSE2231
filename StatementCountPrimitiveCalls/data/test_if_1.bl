@@ -1,0 +1,9 @@
+IF next-is-not-enemy THEN
+    move
+    turnleft
+    turnback
+    skip
+    skip-again
+    infect
+    infect
+END IF
